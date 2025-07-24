@@ -55,6 +55,37 @@
       margin: 4px;
       object-fit: cover;
     }
+    .typing {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.typing-dot {
+  width: 8px;
+  height: 8px;
+  background: #666;
+  border-radius: 50%;
+  animation: blink 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0%, 80%, 100% {
+    transform: scale(0.9);
+    opacity: 0.3;
+  }
+  40% {
+    transform: scale(1.4);
+    opacity: 1;
+  }
+}
     .msg {
       max-width: 75vw;
       padding: 12px 16px;
@@ -133,7 +164,6 @@
 
   <div id="chat">
     <div class="bubble ai">
-      <img src="https://files.catbox.moe/pd3939.jpg" class="avatar" alt="AI" />
       <div class="msg">Hai! Welcome!</div>
     </div>
   </div>
@@ -160,6 +190,31 @@
       clean = clean.replace(regex, "Sensor By Smile Developer");
     });
     return clean;
+  }
+
+  function createTypingBubble() {
+    const bubble = document.createElement("div");
+    bubble.className = "bubble ai";
+
+    const msg = document.createElement("div");
+    msg.className = "msg typing";
+
+    const dot1 = document.createElement("span");
+    const dot2 = document.createElement("span");
+    const dot3 = document.createElement("span");
+
+    dot1.className = "typing-dot";
+    dot2.className = "typing-dot";
+    dot3.className = "typing-dot";
+
+    msg.appendChild(dot1);
+    msg.appendChild(dot2);
+    msg.appendChild(dot3);
+    bubble.appendChild(msg);
+    chat.appendChild(bubble);
+    chat.scrollTop = chat.scrollHeight;
+
+    return bubble;
   }
 
   function addMessage(content, sender, animate = false) {
@@ -232,7 +287,7 @@
 
         btn.onclick = () => {
           navigator.clipboard.writeText(part.content);
-          btn.textContent = "nayashi-ai!";
+          btn.textContent = "xHamz-ai";
           setTimeout(() => (btn.textContent = "xHamz-AI"), 2000);
         };
 
@@ -244,7 +299,6 @@
       }
     });
 
-    // ✅ Hanya user yang pakai avatar
     if (sender === "user") {
       const avatar = document.createElement("img");
       avatar.className = "avatar";
@@ -298,7 +352,7 @@
     addMessage(text, "user");
     input.value = "";
 
-    const typingBubble = addMessage("Nayashii lagi mikir...", "ai");
+    const typingBubble = createTypingBubble();
 
     try {
       const res = await fetch("https://api.siputzx.my.id/api/ai/blackboxai", {
@@ -308,7 +362,7 @@
       });
 
       const data = await res.json();
-      let result = "Maaf ya... Nayashii belum bisa jawab itu sekarang.";
+      let result = "woilah eror jir";
 
       if (res.ok && data && data.status && data.data) {
         result = data.data;
