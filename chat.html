@@ -193,7 +193,6 @@
   }
 
   function parseBoldText(text) {
-    // Ganti teks **bold** dengan <strong>bold</strong>
     return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
   }
 
@@ -306,7 +305,6 @@
       }
     });
 
-    // Avatar hanya untuk AI
     if (sender === "") {
       const avatar = document.createElement("img");
       avatar.className = "avatar";
@@ -352,6 +350,19 @@
     return parts;
   }
 
+  function isAskingWhoMade(text) {
+    const lowered = text.toLowerCase();
+    return (
+      lowered.includes("siapa yang buat kamu") ||
+      lowered.includes("kamu siapa yang buat") ||
+      lowered.includes("siapa pembuat kamu") ||
+      lowered.includes("dibuat oleh siapa") ||
+      lowered.includes("yang buat kamu") ||
+      lowered.includes("buatan siapa") ||
+      lowered.includes("who made you")
+    );
+  }
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const text = input.value.trim();
@@ -359,6 +370,16 @@
 
     addMessage(text, "user");
     input.value = "";
+
+    if (isAskingWhoMade(text)) {
+      const reply = "Hehe, aku dibuat sama orang baik hati broo~ Namanya **Smilexploit**, tapi nama aslinya tuh **Ilham Alfahrizy** 😇";
+      const typingBubble = createTypingBubble();
+      setTimeout(() => {
+        typingBubble.remove();
+        addMessage(reply, "ai", true);
+      }, 1000);
+      return;
+    }
 
     const typingBubble = createTypingBubble();
 
